@@ -23,19 +23,20 @@ echo -e "\nMost goals scored in a single game by one team:"
 echo  "$($PSQL "SELECT MAX(winner_goals) FROM games")"
 
 echo -e "\nNumber of games where the winning team scored more than two goals:"
-echo
+echo  "$($PSQL "SELECT COUNT(*) FROM games WHERE winner_goals > 2")"
 
 echo -e "\nWinner of the 2018 tournament team name:"
-echo
+echo  "$($PSQL "SELECT name FROM teams AS t JOIN games AS g ON t.team_id = g.winner_id WHERE round = 'Final' AND year = 2018")"
 
 echo -e "\nList of teams who played in the 2014 'Eighth-Final' round:"
-echo
+echo  "$($PSQL "SELECT name FROM teams WHERE team_id IN ((SELECT winner_id FROM games WHERE round = 'Eighth-Final' AND year = 2014) UNION (SELECT
+opponent_id FROM games WHERE round = 'Eighth-Final' AND year = 2014)) ORDER BY name")"
 
 echo -e "\nList of unique winning team names in the whole data set:"
-echo
+echo  "$($PSQL "SELECT DISTINCT(name) FROM teams AS t JOIN games AS g ON t.team_id = g.winner_id ORDER BY name")"
 
 echo -e "\nYear and team name of all the champions:"
-echo
+echo  "$($PSQL "SELECT year, name FROM teams AS t JOIN games AS g ON t.team_id = g.winner_id WHERE round = 'Final' ORDER BY year")"
 
 echo -e "\nList of teams that start with 'Co':"
-echo
+echo "$($PSQL "SELECT name FROM teams WHERE name LIKE 'Co%'")"
